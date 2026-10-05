@@ -1,0 +1,92 @@
+.brand-selector {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.brand-card {
+  position: relative;
+  background: #1E293B;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 140px;
+}
+
+.brand-card:hover:not(:disabled) {
+  background: #2D3B52;
+  border-color: #38BDF8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.1);
+}
+
+.brand-card:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.brand-card.coming-soon {
+  background: #1E293B;
+  border-color: #334155;
+}
+
+.brand-icon {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.brand-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #F8FAFC;
+}
+
+.brand-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #475569;
+  color: #CBD5E1;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  .brand-selector {
+    padding: 16px;
+  }
+
+  .brand-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .brand-card {
+    padding: 20px 12px;
+    min-height: 120px;
+  }
+
+  .brand-icon {
+    font-size: 40px;
+  }
+
+  .brand-name {
+    font-size: 14px;
+  }
+}
