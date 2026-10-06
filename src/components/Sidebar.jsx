@@ -111,9 +111,9 @@ const SettingsPanel = ({ onClose }) => {
   const [draft, setDraft] = useState(settings);
   const save = () => { updateSettings(draft); onClose(); };
   return <div className="settings-overlay" onClick={onClose}><div className="settings-panel" onClick={(e) => e.stopPropagation()}><div className="settings-header"><h3>Settings</h3><button className="btn-close" onClick={onClose}>×</button></div><div className="settings-content">
-    <p className="setting-info">密钥仅保存在此浏览器 localStorage。官方请求直连官方 API；选择本地模型时使用下方中转配置。</p>
+    <p className="setting-info">密钥只保存在此浏览器 localStorage，不会写入日志、构建产物或 git。Claude 默认使用 SubRouter bridge（不是 Anthropic 官方 API）。</p>
     <div className="setting-group"><label>OpenAI API key</label><input type="password" value={draft.openaiKey || ''} onChange={e => setDraft({...draft, openaiKey:e.target.value})} /></div>
-    <div className="setting-group"><label>Anthropic API key</label><input type="password" value={draft.anthropicKey || ''} onChange={e => setDraft({...draft, anthropicKey:e.target.value})} /></div>
+    <div className="setting-group"><label>SubRouter Base URL</label><input value={draft.subrouterBaseURL || "https://subrouter.ai/v1"} onChange={e => setDraft({...draft, subrouterBaseURL:e.target.value})} /></div><div className="setting-group"><label>SubRouter API key</label><input type="password" value={draft.subrouterKey || ""} onChange={e => setDraft({...draft, subrouterKey:e.target.value})} /></div><div className="setting-group"><label>SubRouter Claude model</label><input value={draft.subrouterModel || "claude-sonnet-5-5"} onChange={e => setDraft({...draft, subrouterModel:e.target.value})} /><small>填写上游实际模型名。</small></div><div className="setting-group"><label>Anthropic API key（可选直连）</label><input type="password" value={draft.anthropicKey || ''} onChange={e => setDraft({...draft, anthropicKey:e.target.value})} /></div>
     <div className="setting-group"><label>本地模型 Base URL</label><input value={draft.localBaseURL || ''} placeholder="http://localhost:8000/v1" onChange={e => setDraft({...draft, localBaseURL:e.target.value})} /></div>
     <div className="setting-group"><label>本地模型 API key</label><input type="password" value={draft.localKey || ''} onChange={e => setDraft({...draft, localKey:e.target.value})} /></div>
     <button className="save-settings" onClick={save}>保存设置</button>

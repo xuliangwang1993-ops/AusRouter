@@ -9,7 +9,7 @@ const read = (key, fallback) => { try { return JSON.parse(localStorage.getItem(k
 // offered by the brand (notably the old `local-default` value).
 const validModelsFor = (brand) => new Set([
  ...(getModelsForProvider(config.brands[brand]?.provider) || []).map(model => model.id),
- 'local-model'
+ 'local-model', 'claude-sonnet-5-5'
 ]);
 const migrateConversations = (stored) => Object.fromEntries(
  Object.entries(stored && typeof stored === 'object' && !Array.isArray(stored) ? stored : {}).map(([brand, list]) => {
@@ -25,7 +25,7 @@ const migrateConversations = (stored) => Object.fromEntries(
 
 export const AppProvider = ({ children }) => {
  const [activeBrand, setActiveBrand] = useState(null);
- const [settings, setSettings] = useState(() => read('ai-hub-settings', '{"openaiKey":"","anthropicKey":"","localBaseURL":"","localKey":""}'));
+ const [settings, setSettings] = useState(() => read('ai-hub-settings', '{"openaiKey":"","anthropicKey":"","subrouterBaseURL":"https://subrouter.ai/v1","subrouterKey":"","subrouterModel":"claude-sonnet-5-5","localBaseURL":"","localKey":""}'));
  const [conversations, setConversations] = useState(() => migrateConversations(read('ai-hub-conversations', '{}')));
  const [activeIds, setActiveIds] = useState(() => read('ai-hub-active', '{}'));
  useEffect(() => localStorage.setItem('ai-hub-settings', JSON.stringify(settings)), [settings]);
