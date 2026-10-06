@@ -4,7 +4,7 @@ import { BaseAdapter } from './base.js';
 export class OpenAIAdapter extends BaseAdapter {
   constructor(config) {
     super(config);
-    this.baseURL = config.baseURL || 'https://api.openai.com/v1';
+    this.baseURL = 'https://api.openai.com/v1';
     this.apiKey = config.apiKey;
   }
 

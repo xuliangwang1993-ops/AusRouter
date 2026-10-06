@@ -2,10 +2,10 @@ import { useState, useRef, useEffect } from 'react';
 import { useApp } from '../contexts/AppContext.jsx';
 import { useChat } from '../hooks/useChat.js';
 import { useIsMobile } from '../hooks/useMediaQuery.js';
-import { config, getModelsForProvider } from '../config/providers.js';
-import './ChatInterface.css';
+import { config, getModelsWithLocal } from '../config/providers.js';
+import './ChatGPTInterface.css';
 
-export const ChatInterface = ({ onMenuClick }) => {
+export const ChatGPTInterface = ({ onMenuClick }) => {
   const { 
     currentConversation, 
     addMessage, 
@@ -44,7 +44,7 @@ export const ChatInterface = ({ onMenuClick }) => {
 
   const availableModels = () => {
     const brandInfo = getBrandInfo();
-    return getModelsForProvider(brandInfo.provider);
+    return getModelsWithLocal(brandInfo.provider);
   };
 
   const handleSubmit = async (e) => {
@@ -71,7 +71,7 @@ export const ChatInterface = ({ onMenuClick }) => {
       
       await sendMessage({
         messages,
-        model: currentConversation?.model || getModelsForProvider(brandInfo.provider)[0]?.id,
+        model: currentConversation?.model || availableModels()[0]?.id,
         brand: activeBrand,
         credentials: currentConversation?.model === 'local-model' ? { baseURL: settings.localBaseURL, apiKey: settings.localKey } : { apiKey: activeBrand === 'chatgpt' ? settings.openaiKey : settings.anthropicKey },
         onChunk: (chunk) => {
@@ -94,11 +94,11 @@ export const ChatInterface = ({ onMenuClick }) => {
     setShowModelSelector(false);
   };
 
-  const currentModel = currentConversation?.model || getModelsForProvider(brandInfo.provider)[0]?.id;
+  const currentModel = currentConversation?.model || availableModels()[0]?.id;
   const currentModelName = availableModels().find(m => m.id === currentModel)?.name || currentModel;
 
   return (
-    <div className="chat-interface">
+    <div className="chatgpt-interface">
       <div className="chat-header">
         {isMobile && (
           <button className="btn-menu" onClick={onMenuClick}>

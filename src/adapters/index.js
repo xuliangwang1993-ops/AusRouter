@@ -1,44 +1,20 @@
 import { MockAdapter } from './mock.js';
 import { OpenAIAdapter } from './openai.js';
 import { AnthropicAdapter } from './anthropic.js';
+import { GoogleAdapter } from './google.js';
+import { CopilotAdapter } from './copilot.js';
+import { XAIAdapter } from './xai.js';
 import { config } from '../config/providers.js';
-
-// Adapter factory - creates the right adapter based on provider
-export const createAdapter = (providerName) => {
-  const providerConfig = config.providers[providerName];
-  
-  if (!providerConfig) {
-    throw new Error(`Unknown provider: ${providerName}`);
-  }
-
-  switch (providerName) {
-    case 'mock':
-      return new MockAdapter(providerConfig);
-    case 'openai':
-      return new OpenAIAdapter(providerConfig);
-    case 'anthropic':
-      return new AnthropicAdapter(providerConfig);
-    case 'local':
-      // Local uses OpenAI-compatible API, fallback to mock if no baseURL or apiKey
-      if (!providerConfig.baseURL || !providerConfig.apiKey) {
-        return new MockAdapter(providerConfig);
-      }
-      return new OpenAIAdapter(providerConfig);
-    default:
-      throw new Error(`No adapter implemented for provider: ${providerName}`);
-  }
+export const createAdapter = (providerName, credentials = {}) => {
+  const p = config.providers[providerName];
+  if (!p) throw new Error(`Unknown provider: ${providerName}`);
+  if (providerName === 'local') { if (!credentials.baseURL || !credentials.apiKey) throw new Error('本地模型未配置 Base URL 或 API key，请在设置中完成配置'); return new OpenAIAdapter({ baseURL: credentials.baseURL.replace(/\/$/, ''), apiKey: credentials.apiKey }); }
+  const settings = { ...p, baseURL: providerName === 'openai' ? 'https://api.openai.com/v1' : providerName === 'anthropic' ? 'https://api.anthropic.com/v1' : undefined, apiKey: credentials.apiKey };
+  if (providerName === 'openai') return new OpenAIAdapter(settings);
+  if (providerName === 'anthropic') return new AnthropicAdapter(settings);
+  if (providerName === 'google') return new GoogleAdapter(settings);
+  if (providerName === 'copilot') return new CopilotAdapter(settings);
+  if (providerName === 'xai') return new XAIAdapter(settings);
+  return new MockAdapter(p);
 };
-
-// Get adapter for a specific model
-export const getAdapterForModel = (modelId) => {
-  // Check which provider has this model
-  for (const [providerName, providerConfig] of Object.entries(config.providers)) {
-    const hasModel = providerConfig.models?.some(m => m.id === modelId);
-    if (hasModel) {
-      return createAdapter(providerName);
-    }
-  }
-  
-  // Default to mock if model not found
-  return createAdapter('mock');
-};
+export const getAdapterForModel = (model, brand, credentials) => createAdapter(model === 'local-model' ? 'local' : config.brands[brand]?.provider, credentials);

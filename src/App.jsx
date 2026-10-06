@@ -2,51 +2,9 @@ import { useState } from 'react';
 import { AppProvider, useApp } from './contexts/AppContext.jsx';
 import { BrandSelector } from './components/BrandSelector.jsx';
 import { Sidebar } from './components/Sidebar.jsx';
-import { ChatInterface } from './components/ChatInterface.jsx';
+import { ChatGPTInterface } from './components/ChatGPTInterface.jsx';
+import { ClaudeInterface } from './components/ClaudeInterface.jsx';
 import { useIsMobile } from './hooks/useMediaQuery.js';
 import './App.css';
-
-function AppContent() {
-  const { activeBrand } = useApp();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const isMobile = useIsMobile();
-
-  // Show brand selector only when no brand is active
-  if (!activeBrand) {
-    return (
-      <div className="app-container">
-        <div className="default-bot-layout">
-          <div className="default-bot-header">
-            <h1>AI Hub</h1>
-            <p>Your unified AI assistant</p>
-          </div>
-          <ChatInterface onMenuClick={() => setSidebarOpen(true)} />
-          <div className="brand-selector-footer">
-            <div className="divider">
-              <span>Switch to a specific AI</span>
-            </div>
-            <BrandSelector />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Show chat interface with sidebar when brand is active
-  return (
-    <div className="app-container">
-      <Sidebar isOpen={sidebarOpen || !isMobile} onClose={() => setSidebarOpen(false)} />
-      <ChatInterface onMenuClick={() => setSidebarOpen(true)} />
-    </div>
-  );
-}
-
-function App() {
-  return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
-  );
-}
-
-export default App;
+function Content() { const { activeBrand } = useApp(); const [drawer, setDrawer] = useState(false); const mobile = useIsMobile(); if (!activeBrand) return <main className="home"><div className="home-mark">AI Hub</div><p>选择一个品牌开始对话</p><BrandSelector /></main>; return <div className={`app-container brand-${activeBrand}`}><Sidebar isOpen={!mobile || drawer} onClose={() => setDrawer(false)} /><main className="brand-main">{activeBrand === 'chatgpt' ? <ChatGPTInterface onMenuClick={() => setDrawer(true)} /> : <ClaudeInterface onMenuClick={() => setDrawer(true)} />}</main></div>; }
+export default function App() { return <AppProvider><Content /></AppProvider>; }

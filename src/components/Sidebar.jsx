@@ -108,34 +108,14 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
 const SettingsPanel = ({ onClose }) => {
   const { settings, updateSettings } = useApp();
-
-  return (
-    <div className="settings-overlay" onClick={onClose}>
-      <div className="settings-panel" onClick={(e) => e.stopPropagation()}>
-        <div className="settings-header">
-          <h3>Settings</h3>
-          <button className="btn-close" onClick={onClose}>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M5 5L15 15M5 15L15 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-          </button>
-        </div>
-        <div className="settings-content">
-          <div className="setting-group">
-            <label htmlFor="bot-name">Bot Name</label>
-            <input
-              id="bot-name"
-              type="text"
-              value={settings.botName}
-              onChange={(e) => updateSettings({ ...settings, botName: e.target.value })}
-              placeholder="AI Assistant"
-            />
-          </div>
-          <div className="setting-info">
-            Configure API keys and endpoints in <code>src/config/providers.js</code>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const [draft, setDraft] = useState(settings);
+  const save = () => { updateSettings(draft); onClose(); };
+  return <div className="settings-overlay" onClick={onClose}><div className="settings-panel" onClick={(e) => e.stopPropagation()}><div className="settings-header"><h3>Settings</h3><button className="btn-close" onClick={onClose}>×</button></div><div className="settings-content">
+    <p className="setting-info">密钥仅保存在此浏览器 localStorage。官方请求直连官方 API；选择本地模型时使用下方中转配置。</p>
+    <div className="setting-group"><label>OpenAI API key</label><input type="password" value={draft.openaiKey || ''} onChange={e => setDraft({...draft, openaiKey:e.target.value})} /></div>
+    <div className="setting-group"><label>Anthropic API key</label><input type="password" value={draft.anthropicKey || ''} onChange={e => setDraft({...draft, anthropicKey:e.target.value})} /></div>
+    <div className="setting-group"><label>本地模型 Base URL</label><input value={draft.localBaseURL || ''} placeholder="http://localhost:8000/v1" onChange={e => setDraft({...draft, localBaseURL:e.target.value})} /></div>
+    <div className="setting-group"><label>本地模型 API key</label><input type="password" value={draft.localKey || ''} onChange={e => setDraft({...draft, localKey:e.target.value})} /></div>
+    <button className="save-settings" onClick={save}>保存设置</button>
+  </div></div></div>;
 };

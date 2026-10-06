@@ -311,3 +311,4 @@
     width: 280px;
   }
 }
+.save-settings{width:100%;padding:10px;border:0;border-radius:8px;background:#202123;color:white;cursor:pointer}.setting-group input{width:100%;padding:9px;border:1px solid #ddd;border-radius:6px}.setting-info{font-size:12px;line-height:1.5;color:#777}
