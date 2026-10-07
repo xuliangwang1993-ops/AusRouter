@@ -1,4 +1,42 @@
 import { MockAdapter } from './mock.js';
-import { OpenAIAdapter } from './openai.js'; import { SubRouterAdapter } from './subrouter.js'; import { AnthropicAdapter } from './anthropic.js'; import { GoogleAdapter } from './google.js'; import { CopilotAdapter } from './copilot.js'; import { XAIAdapter } from './xai.js'; import { config } from '../config/providers.js';
-export const createAdapter = (providerName, credentials = {}) => { const p=config.providers[providerName]; if(!p) throw new Error(`Unknown provider: ${providerName}`); if(providerName==='subrouter') return new SubRouterAdapter({...p,baseURL:credentials.baseURL,apiKey:credentials.apiKey}); if(providerName==='local') { if(!credentials.baseURL||!credentials.apiKey) throw new Error('本地模型未配置 Base URL 或 API key'); return new OpenAIAdapter({baseURL:credentials.baseURL.replace(/\/$/,''),apiKey:credentials.apiKey}); } const settings={...p,baseURL:providerName==='openai'?'https://api.openai.com/v1':providerName==='anthropic'?'https://api.anthropic.com/v1':undefined,apiKey:credentials.apiKey}; if(providerName==='openai')return new OpenAIAdapter(settings); if(providerName==='anthropic')return new AnthropicAdapter(settings); if(providerName==='google')return new GoogleAdapter(settings); if(providerName==='copilot')return new CopilotAdapter(settings); if(providerName==='xai')return new XAIAdapter(settings); return new MockAdapter(p); };
-export const getAdapterForModel = (model, brand, credentials) => createAdapter(model==='local-model'?'local':config.brands[brand]?.provider,credentials);
+import { OpenAIAdapter } from './openai.js';
+import { SubRouterAdapter } from './subrouter.js';
+import { AnthropicAdapter } from './anthropic.js';
+import { GoogleAdapter } from './google.js';
+import { CopilotAdapter } from './copilot.js';
+import { XAIAdapter } from './xai.js';
+import { config } from '../config/providers.js';
+
+export const createAdapter = (providerName, credentials = {}) => {
+  const p = config.providers[providerName];
+  if (!p) throw new Error(`Unknown provider: ${providerName}`);
+  if (providerName === 'subrouter') return new SubRouterAdapter({ ...p, baseURL: credentials.baseURL, apiKey: credentials.apiKey });
+  if (providerName === 'local') {
+    if (!credentials.baseURL || !credentials.apiKey) throw new Error('本地模型未配置 Base URL 或 API key');
+    return new OpenAIAdapter({ baseURL: credentials.baseURL.replace(/\/$/, ''), apiKey: credentials.apiKey });
+  }
+  const settings = {
+    ...p,
+    baseURL: providerName === 'openai' ? 'https://api.openai.com/v1' : providerName === 'anthropic' ? 'https://api.anthropic.com/v1' : undefined,
+    apiKey: credentials.apiKey
+  };
+  if (providerName === 'openai') return new OpenAIAdapter(settings);
+  if (providerName === 'anthropic') return new AnthropicAdapter(settings);
+  if (providerName === 'google') return new GoogleAdapter(settings);
+  if (providerName === 'copilot') return new CopilotAdapter(settings);
+  if (providerName === 'xai') return new XAIAdapter(settings);
+  return new MockAdapter(p);
+};
+
+// Routing contract:
+// - `local-model` always uses the user-configured local relay (OpenAI-compatible).
+// - The Claude brand may run on two channels per conversation: the SubRouter
+//   bridge (default) or direct Anthropic Messages API. The channel is stored
+//   on the conversation, so the UI promise and the actual request agree.
+// - Every other brand uses its provider's official endpoint.
+export const getAdapterForModel = (model, brand, credentials = {}, channel) => {
+  if (model === 'local-model') return createAdapter('local', credentials.local || credentials);
+  if (brand === 'claude' && channel === 'anthropic') return createAdapter('anthropic', credentials.anthropic || credentials);
+  const provider = config.brands[brand]?.provider;
+  return createAdapter(provider, credentials[provider] || credentials);
+};

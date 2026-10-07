@@ -1,0 +1,34 @@
+/* ---- message content: markdown, states, meta ---- */
+.markdown { white-space: normal; }
+.markdown p { margin: 0 0 10px; }
+.markdown p:last-child { margin-bottom: 0; }
+.markdown h2, .markdown h3, .markdown h4 { margin: 14px 0 8px; font-family: Georgia, serif; font-weight: 600; }
+.markdown ul { margin: 0 0 10px; padding-left: 20px; }
+.markdown li { margin: 3px 0; }
+.markdown .inline-code { padding: 1px 5px; border-radius: 4px; background: #efe4d8; font-size: .88em; }
+.code-block { position: relative; margin: 10px 0; padding: 12px 12px 12px; border: 1px solid #e7dcd0; border-radius: 8px; background: #2d2620; color: #f0e7dd; overflow-x: auto; white-space: pre; font-size: 12.5px; line-height: 1.6; }
+.code-block code { background: transparent; color: inherit; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.code-lang { position: absolute; top: 7px; right: 66px; color: #a08e80; font-size: 10px; letter-spacing: .05em; text-transform: uppercase; }
+.code-copy { position: absolute; top: 6px; right: 8px; padding: 3px 8px; border: 1px solid #57483c; border-radius: 5px; background: #3a322b; color: #d9cbbf; font-size: 10px; cursor: pointer; }
+.code-copy:hover { background: #4a4038; color: #fff; }
+.reasoning-block { margin-top: 8px; border: 1px dashed #d3bda9; border-radius: 7px; background: #f7efe6; font-size: 12px; }
+.reasoning-block summary { padding: 7px 10px; color: #8a6a52; cursor: pointer; }
+.reasoning-block pre { margin: 0; padding: 0 12px 10px; white-space: pre-wrap; color: #7c6653; font-size: 11.5px; line-height: 1.6; }
+.tool-card { margin-top: 8px; padding: 9px 11px; border: 1px solid #d3bda9; border-radius: 7px; background: #f4ece2; font-size: 11px; }
+.tool-card b { color: #8a6a52; font-size: 10.5px; letter-spacing: .04em; }
+.tool-card pre { margin: 6px 0 0; max-height: 160px; overflow: auto; white-space: pre-wrap; color: #6f5a48; font-size: 11px; }
+.message-error { display: flex; align-items: center; gap: 10px; margin-top: 8px; padding: 8px 11px; border: 1px solid #d9a08c; border-radius: 7px; background: #fbeeea; color: #96432c; font-size: 12px; }
+.message-error button { padding: 4px 10px; border: 1px solid #c9806a; border-radius: 5px; background: #fff; color: #96432c; font-size: 11px; cursor: pointer; }
+.message-stopped { margin-top: 6px; color: #a18f81; font-size: 11px; }
+.message-meta { margin-top: 6px; color: #b3a294; font-size: 10px; letter-spacing: .03em; }
+.edit-box textarea { box-sizing: border-box; width: 100%; padding: 9px; border: 1px solid #cdb9a5; border-radius: 7px; background: #fffdf9; color: #302a25; font: 14px/1.6 Georgia, serif; }
+.edit-actions { display: flex; gap: 7px; margin-top: 7px; }
+.edit-actions button { padding: 5px 11px; border: 1px solid #cdb9a5; border-radius: 6px; background: #fffdf9; color: #765c4b; font-size: 11.5px; cursor: pointer; }
+.edit-actions button:first-child { background: #b85f3d; border-color: #b85f3d; color: #fff; }
+.typing-dot { width: 7px; height: 7px; margin-top: 8px; border-radius: 50%; background: #b85f3d; animation: pulse 1s infinite ease-in-out; }
+@keyframes pulse { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+.channel-pill { padding: 4px 8px; border: 1px solid #e2d3c3; border-radius: 999px; background: #f6efe7; color: #8a6a52; font-size: 10px; white-space: nowrap; }
+.channel-dot.ch-subrouter { background: #bd704c; }
+.channel-dot.ch-anthropic { background: #7c5cbf; }
+.channel-dot.ch-local { background: #4c8f6a; }
+
